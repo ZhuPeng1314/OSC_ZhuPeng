@@ -12,10 +12,24 @@ class ZPTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let newsSVC = ZPSwipableViewController()
         
-        let tweetsSVC = ZPSwipableViewController()
+        
+        let newsVC = ZPNewsViewController(type: NewsListType.News)
+        let hotNewsVC = ZPNewsViewController(type: NewsListType.AllTypeWeekHottest)
+        let blogVC = ZPBlogsViewController(type: BlogsType.Latest)
+        let recommendBlogVC = ZPBlogsViewController(type: BlogsType.Recommended)
+
+        let newsSVC = ZPSwipableViewController(title: "综合",
+                                           subTitles: ["资讯", "热点", "博客", "推荐"],
+                                         controllers: [newsVC,hotNewsVC,blogVC,recommendBlogVC],
+                                         underTabBar: true)
+        let newsNav = self.addNavigationItemForViewController(newsSVC)
+        
+        let tweetsSVC = ZPSwipableViewController(title: "动弹",
+                                             subTitles: ["最新动弹", "热门动弹", "我的动弹"],
+                                           controllers: nil,
+                                           underTabBar: true)
+        let tweetsNav = self.addNavigationItemForViewController(tweetsSVC)
         
         let discoverSB = UIStoryboard.init(name: "Discover", bundle: NSBundle.mainBundle())
         let discoverNav = discoverSB.instantiateViewControllerWithIdentifier("Nav")
@@ -23,7 +37,7 @@ class ZPTabBarController: UITabBarController {
         let homepageSB = UIStoryboard.init(name: "Homepage", bundle: NSBundle.mainBundle())
         let homepageNav = homepageSB.instantiateViewControllerWithIdentifier("Nav")
         
-        self.viewControllers = [newsSVC,tweetsSVC,UIViewController(),discoverNav,homepageNav]
+        self.viewControllers = [newsNav,tweetsNav,UIViewController(),discoverNav,homepageNav]
         let title = ["综合","动弹","","发现","我"]
         let images = ["tabbar-news","tabbar-tweet","","tabbar-discover","tabbar-me"]
         let items = self.tabBar.items!
@@ -47,14 +61,11 @@ class ZPTabBarController: UITabBarController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func addNavigationItemForViewController(viewController:UIViewController)->UINavigationController
+    {
+        let navigationController = UINavigationController(rootViewController: viewController)
+        
+        return navigationController
     }
-    */
 
 }
