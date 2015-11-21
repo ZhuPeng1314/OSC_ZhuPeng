@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Ono
 
 
 
@@ -15,10 +14,6 @@ class ZPOSCBaseObject: NSObject {
     
     override init()
     {
-        super.init()
-    }
-
-    init(xml:ONOXMLElement) {
         super.init()
     }
     

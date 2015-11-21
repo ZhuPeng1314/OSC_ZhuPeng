@@ -8,8 +8,8 @@
 
 import UIKit
 import AFNetworking
-import Ono
 import MJRefresh
+import TBXML
 
 protocol ZPObjsViewControllerDelegate:NSObjectProtocol
 {
@@ -19,7 +19,9 @@ protocol ZPObjsViewControllerDelegate:NSObjectProtocol
 
 class ZPObjsViewController: UITableViewController {
     
-    var objClass:ZPOSCSummary.Type? //存储实体数据对象的类型
+    
+    
+    //var objClass:ZPOSCSummary.Type? //存储实体数据对象的类型
     
     var objects = NSMutableArray() //存储所有实体数据对象
     var allCount:Int = 0
@@ -101,10 +103,6 @@ class ZPObjsViewController: UITableViewController {
     func fetchObjectsOnPage(page:Int, refresh:Bool)
     {
         requestManager.GET(self.generateURL(forPage: page), parameters: nil, success: { (operation, data) -> Void in
-            let responseDocument = data as! ONOXMLDocument
-            
-            //NSLog("\(responseDocument)");
-            let objectsXML = self.parseXML(responseDocument)
             
             if (refresh)
             {
@@ -113,12 +111,15 @@ class ZPObjsViewController: UITableViewController {
                 self.refreshDidSucceed()
             }
             
-            self.parseExtraInfo(fromDocument: responseDocument)
+            let tbxml = TBXML.getXMLFromUTF8Data(data as! NSData)
             
-            for objXML in objectsXML
+            let newObjects = self.parseXML(tbxml: tbxml)
+            
+            self.parseXML(tbxml: tbxml)
+            
+            for obj in newObjects
             {
                 var shouldBeAdded = true
-                let obj = self.objClass!.init(xml: objXML)
                 
                 for existsObj in self.objects
                 {
@@ -135,13 +136,14 @@ class ZPObjsViewController: UITableViewController {
                 }
             }
             
+            
             //自动刷新的部分 暂时不实现
             
             
             //主线程中刷新UI
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 //刷新UI前的操作，可在子类中重写
-                self.tableviewWillReload(forResponseObjectsCount: objectsXML.count)
+                self.tableviewWillReload(forResponseObjectsCount: newObjects.count)
                 
                 //顶部刷新控件
                 if self.tableView.mj_header.isRefreshing()
@@ -194,12 +196,12 @@ class ZPObjsViewController: UITableViewController {
         fatalError("generateURL has not been implemented, it should over ride in subclasses \(self.dynamicType)")
     }
     
-    func parseXML(xml:ONOXMLDocument)->Array<ONOXMLElement> //子类必须实现的方法
+    func parseXML(tbxml tbxml:TBXML)->Array<ZPOSCSummary> //子类必须实现的方法
     {
-        fatalError("parseXML has not been implemented, it should over ride in subclasses \(self.dynamicType)")
+        fatalError("parseXML(tbxml) has not been implemented, it should over ride in subclasses \(self.dynamicType)")
     }
     
-    func parseExtraInfo(fromDocument document:ONOXMLDocument)//可选
+    func parseExtraInfo(fromTBXML tbxml:TBXML)//可选
     {
         NSLog("parseExtraInfo should over ride in subclasses");
     }

@@ -13,10 +13,44 @@ extension TBXML {
     
     static func stringForElementNamed(name:String, parentElement:UnsafeMutablePointer<TBXMLElement>)->String!
     {
-        return TBXML.textForElement(TBXML.childElementNamed(name, parentElement: parentElement))
+        let node = TBXML.childElementNamed(name, parentElement: parentElement)
+        if node != nil
+        {
+            return TBXML.textForElement(node)
+        }
+        return nil
     }
     
-    static func getRootElementFromStringData(dataString:NSString)->TBXML!
+    static func URLForElementNamed(name:String, parentElement:UnsafeMutablePointer<TBXMLElement>)->NSURL!
+    {
+        if let urlString = TBXML.stringForElementNamed(name, parentElement: parentElement)
+        {
+            return NSURL(string: urlString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()))
+        }
+        return nil
+        
+    }
+    
+    static func intValueForElementNamed(name:String, parentElement:UnsafeMutablePointer<TBXMLElement>)->Int!
+    {
+        if let intValueString = TBXML.stringForElementNamed(name, parentElement: parentElement)
+        {
+            return Int(intValueString)
+        }
+        return nil
+    }
+    
+    static func dateForElementNamed(name:String, parentElement:UnsafeMutablePointer<TBXMLElement>)->NSDate!
+    {
+        
+        if let dateString = TBXML.stringForElementNamed(name, parentElement: parentElement)
+        {
+            return NSDate.dateFromString(dateString)
+        }
+        return nil
+    }
+    
+    static func getXMLFromStringData(dataString:NSString)->TBXML!
     {
         var XML:TBXML!
         do{
@@ -31,8 +65,10 @@ extension TBXML {
     static func getXMLFromUTF8Data(data:NSData)->TBXML!
     {
         let dataString = NSString(data: data, encoding: NSUTF8StringEncoding)
-        return TBXML.getRootElementFromStringData(dataString!)
+        return TBXML.getXMLFromStringData(dataString!)
     }
+    
+    
 
 }
 

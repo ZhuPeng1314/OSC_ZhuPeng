@@ -8,13 +8,12 @@
 
 import UIKit
 import AFNetworking
-import AFOnoResponseSerializer
 
 extension AFHTTPRequestOperationManager {
     static func OSCManager()->AFHTTPRequestOperationManager
     {
         let manager = AFHTTPRequestOperationManager(baseURL: nil)
-        manager.responseSerializer = AFOnoResponseSerializer.XMLResponseSerializer()
+        manager.responseSerializer = AFHTTPResponseSerializer()
         manager.responseSerializer.acceptableContentTypes?.insert("text/html")
         manager.requestSerializer.setValue(self.generateUserAgent(), forHTTPHeaderField: "User-Agent")
         

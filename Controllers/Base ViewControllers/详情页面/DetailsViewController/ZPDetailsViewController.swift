@@ -116,7 +116,7 @@ class ZPDetailsViewController: ZPBottomBarViewController,UIWebViewDelegate,UIScr
     {
         requestManager.GET(self.detailsURLString, parameters: nil, success: { (operation, data) -> Void in
             
-            let xml = TBXML.getXMLFromUTF8Data(operation.responseData!)
+            let xml = TBXML.getXMLFromUTF8Data(data as! NSData)
             
             if xml == nil
             {//数据无法解析,直接返回上一级

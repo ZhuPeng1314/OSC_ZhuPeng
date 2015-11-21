@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Ono
+import TBXML
 
 enum NewsType:Int
 {
@@ -67,21 +67,28 @@ class ZPOSCNews: ZPOSCSummary {
         super.init()
     }
     
-    required init(xml: ONOXMLElement) {
-        super.init(xml: xml)
+    
+    
+    required init(element: UnsafeMutablePointer<TBXMLElement>) {
+        super.init(element: element)
         
-        self.url = NSURL(string: xml.firstChildWithTag(KeyNews.kURL).stringValue().stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()))
+        self.url = TBXML.URLForElementNamed(KeyNews.kURL, parentElement: element)
         
-        let newsTypeNode = xml.firstChildWithTag(KeyNews.kNewsType) as ONOXMLElement
-        self.type = NewsType(rawValue: newsTypeNode.firstChildWithTag(KeyNews.kType).numberValue().integerValue)
-        self.eventURL = NSURL(string: newsTypeNode.firstChildWithTag(KeyNews.kEventURL).stringValue().stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()))
-        self.authorUID2 = newsTypeNode.firstChildWithTag(KeyNews.kAuthorUID2).stringValue()
-        if let attachmentNode = newsTypeNode.firstChildWithTag(KeyNews.kAttachment)
-        {//在newsTypeNode有可能不含attachment
-            self.attachment = attachmentNode.stringValue()
-        }
+        let newsTypeNode = TBXML.childElementNamed(KeyNews.kNewsType, parentElement: element)
+        self.type = NewsType(rawValue: TBXML.intValueForElementNamed(KeyNews.kType, parentElement: newsTypeNode))
+        self.eventURL = TBXML.URLForElementNamed(KeyNews.kEventURL, parentElement: newsTypeNode)
+        self.authorUID2 = TBXML.stringForElementNamed(KeyNews.kAuthorUID2, parentElement: newsTypeNode)
+        //在newsTypeNode有可能不含attachment,则返回值为nil
+        self.attachment = TBXML.stringForElementNamed(KeyNews.kAttachment, parentElement: newsTypeNode)
+        
+        
     }
     
     
     
 }
+
+
+
+
+

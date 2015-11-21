@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Ono
+import TBXML
 
 enum BlogsType:Int{
     case Latest
@@ -30,8 +30,6 @@ class ZPBlogsViewController: ZPNewsViewController {
     {
         type = type1
         super.init()
-        
-        self.objClass = ZPOSCBlog.self
         
         //自动刷新部分
         //self.needAutoRefresh = true //默认为true
@@ -56,18 +54,17 @@ class ZPBlogsViewController: ZPNewsViewController {
         return "\(OSCAPI_PREFIX)\(OSCAPI_BLOGS_LIST)?type=\(blogType)&pageIndex=\(page)&\(OSCAPI_SUFFIX)"
     }
     
-    override func parseXML(xml:ONOXMLDocument)->Array<ONOXMLElement>
-    {
-        let root = xml.rootElement as ONOXMLElement
-        let blogslist = root.firstChildWithTag("blogs") as ONOXMLElement
-        let blog = blogslist.childrenWithTag("blog") as! Array<ONOXMLElement>
-        
-        return blog
+    override func parseXML(tbxml tbxml: TBXML) -> Array<ZPOSCSummary> {
+        let blogslist = TBXML.childElementNamed("blogs", parentElement: tbxml.rootXMLElement)
+        var blogs = Array<ZPOSCSummary>()
+        TBXML.iterateElementsForQuery("blog", fromElement: blogslist) { (blogXML) -> Void in
+            let blog = ZPOSCBlog(element: blogXML)
+            blogs.append(blog)
+        }
+        return blogs
     }
     
-    override func parseExtraInfo(fromDocument document:ONOXMLDocument)//可选
-    {
-        NSLog("parseExtraInfo should over ride in subclasses");
+    override func parseExtraInfo(fromTBXML tbxml: TBXML) {
     }
     
     override func tableviewWillReload(forResponseObjectsCount objCount:Int)//可选

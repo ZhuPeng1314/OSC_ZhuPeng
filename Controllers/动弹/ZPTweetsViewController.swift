@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TBXML
 
 enum TweetsType:Int
 {
@@ -17,9 +18,23 @@ enum TweetsType:Int
 
 class ZPTweetsViewController: ZPObjsViewController {
     
+    static let kTweetCellID = "TweetCell"
+    var uid:Int64!
+    
     init(type: TweetsType)
     {
         super.init()
+        switch (type)
+        {
+        case .AllTweets: self.uid = 0
+        case .HotestTweets: self.uid = -1
+        case .OwnTweets: break //暂不实现
+        }
+        
+        
+        self.needAutoRefresh = (type != .OwnTweets)
+        self.refreshInterval = 3600
+        self.kLastRefreshTimeKey = "TweetsRefreshInterval-\(type)"
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -28,8 +43,8 @@ class ZPTweetsViewController: ZPObjsViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.tableView.registerClass(ZPTweetCell.self, forCellReuseIdentifier: ZPTweetsViewController.kTweetCellID)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,14 +53,53 @@ class ZPTweetsViewController: ZPObjsViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func generateURL(forPage page:Int)->String //子类必须实现的方法
+    {
+        return "\(OSCAPI_PREFIX)\(OSCAPI_TWEETS_LIST)?uid=\(self.uid)&pageIndex=\(page)&\(OSCAPI_SUFFIX)&clientType=android"
     }
-    */
+    
+    /*override func parseXML(xml:ONOXMLDocument)->Array<ONOXMLElement> //子类必须实现的方法
+    {
+        return (xml.rootElement.firstChildWithTag("tweets").childrenWithTag("tweet") as! Array<ONOXMLElement>)
+    }*/
+    
+    ///用Blog的代码占位---------------
+    override func parseXML(tbxml tbxml: TBXML) -> Array<ZPOSCSummary> {
+        let blogslist = TBXML.childElementNamed("blogs", parentElement: tbxml.rootXMLElement)
+        var blogs = Array<ZPOSCSummary>()
+        TBXML.iterateElementsForQuery("blog", fromElement: blogslist) { (blogXML) -> Void in
+            let blog = ZPOSCBlog(element: blogXML)
+            blogs.append(blog)
+        }
+        return blogs
+    }
+    
+    override func parseExtraInfo(fromTBXML tbxml: TBXML) {
+        
+    }
+
+    override func tableviewWillReload(forResponseObjectsCount objCount:Int)//可选
+    {
+        if self.uid == -1
+        {
+            self.lastCell.status = LastCellStatus.Finished
+        }else if objCount < 20
+        {
+            self.lastCell.status = LastCellStatus.Finished
+        }else
+        {
+            self.lastCell.status = LastCellStatus.More
+        }
+    }
+    
+    override func refreshDidSucceed()//可选
+    {
+        NSLog("refreshDidSucceed should over ride in subclasses");
+    }
+    
+    override func anotherNetWorking()//可选
+    {
+        NSLog("anotherNetWorking should over ride in subclasses");
+    }
 
 }

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Ono
+import TBXML
 
 class ZPOSCBlog: ZPOSCSummary {
     
@@ -18,14 +18,15 @@ class ZPOSCBlog: ZPOSCSummary {
 
     var documentType:Int!
     
-    required init(xml: ONOXMLElement) {
-        super.init(xml: xml)
-        self.documentType = xml.firstChildWithTag(KeyBlog.kDocumentType).numberValue().integerValue
+    required init(element: UnsafeMutablePointer<TBXMLElement>) {
+        super.init(element: element)
+        self.documentType = TBXML.intValueForElementNamed(KeyBlog.kDocumentType, parentElement: element)
     }
     
-    override func initAuthor(xml: ONOXMLElement) {
-        self.author = xml.firstChildWithTag(KeyBlog.kAuthor).stringValue()
+    override func initAuthor(element element: UnsafeMutablePointer<TBXMLElement>) {
+        self.author = TBXML.stringForElementNamed(KeyBlog.kAuthor, parentElement: element)
     }
+    
     
     private var attrTitle:NSMutableAttributedString!
     var attributedTitle : NSAttributedString

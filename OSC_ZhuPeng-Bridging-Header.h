@@ -11,8 +11,6 @@
 
 #import <RESideMenu/RESideMenu.h>
 #import <AFNetworking/AFNetworking.h>
-#import <AFOnoResponseSerializer/AFOnoResponseSerializer.h>
-#import <Ono/Ono.h>
 #import "ZPOSCAPI.h"
 #import <FontAwesome/FAImageView.h>
 #import <FontAwesome/NSString+FontAwesome.h>

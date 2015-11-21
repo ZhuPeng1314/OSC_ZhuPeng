@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Ono
+import TBXML
 
 class ZPOSCSummary: ZPOSCBaseObject {
     struct Key {
@@ -31,29 +31,28 @@ class ZPOSCSummary: ZPOSCBaseObject {
     override init() {
         super.init()
     }
-
-    required override init(xml: ONOXMLElement) {
-        super.init(xml: xml)
-        self.id = xml.firstChildWithTag(Key.kID).stringValue()
-        self.title = xml.firstChildWithTag(Key.kTitle).stringValue()
-        self.body = xml.firstChildWithTag(Key.kBody).stringValue()
-        self.initAuthor(xml)
-        if let authorIdNode = xml.firstChildWithTag(Key.kAuthorID)
-        {
-            self.authorID = authorIdNode.stringValue()
-        }
-        self.pubDate = NSDate.dateFromString(xml.firstChildWithTag(Key.kPubDate).stringValue())
-        self.initCommentCount(xml)
+    
+    required init(element: UnsafeMutablePointer<TBXMLElement>) {
+        super.init()
+        
+        self.id = TBXML.stringForElementNamed(Key.kID, parentElement: element)
+        self.title = TBXML.stringForElementNamed(Key.kTitle, parentElement: element)
+        self.body = TBXML.stringForElementNamed(Key.kBody, parentElement: element)
+        self.initAuthor(element: element)
+        self.authorID = TBXML.stringForElementNamed(Key.kAuthorID, parentElement: element)
+        self.pubDate = TBXML.dateForElementNamed(Key.kPubDate, parentElement: element)
+        self.initCommentCount(element: element)
+        
     }
     
-    func initAuthor(xml: ONOXMLElement)
+    func initAuthor(element element: UnsafeMutablePointer<TBXMLElement>)
     {
-        self.author = xml.firstChildWithTag(Key.kAuthor).stringValue()
+        self.author = TBXML.stringForElementNamed(Key.kAuthor, parentElement: element)
     }
     
-    func initCommentCount(xml: ONOXMLElement)
+    func initCommentCount(element element: UnsafeMutablePointer<TBXMLElement>)
     {
-        self.commentCount = xml.firstChildWithTag(Key.kCommentCount).numberValue().integerValue
+        self.commentCount = TBXML.intValueForElementNamed(Key.kCommentCount, parentElement: element)
     }
     
     override func isEqual(object: AnyObject?) -> Bool {

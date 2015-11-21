@@ -8,7 +8,7 @@
 
 import UIKit
 import AFNetworking
-import Ono
+import TBXML
 import DateTools
 
 enum NewsListType:Int{
@@ -33,8 +33,6 @@ class ZPNewsViewController: ZPObjsViewController {
     {
         type = type1
         super.init()
-        
-        self.objClass = ZPOSCNews.self
         
         //自动刷新部分 
         //self.needAutoRefresh = true //默认为true
@@ -76,18 +74,18 @@ class ZPNewsViewController: ZPObjsViewController {
         
     }
     
-    override func parseXML(xml:ONOXMLDocument)->Array<ONOXMLElement>
-    {
-        let root = xml.rootElement as ONOXMLElement
-        let newslist = root.firstChildWithTag("newslist") as ONOXMLElement
-        let news = newslist.childrenWithTag("news") as! Array<ONOXMLElement>
+    override func parseXML(tbxml tbxml: TBXML) -> Array<ZPOSCSummary> {
+        let newslist = TBXML.childElementNamed("newslist", parentElement: tbxml.rootXMLElement)
+        var news = Array<ZPOSCSummary>()
+        TBXML.iterateElementsForQuery("news", fromElement: newslist) { (newsItemXML) -> Void in
+            let newsItem = ZPOSCNews(element: newsItemXML)
+            news.append(newsItem)
+        }
         
         return news
     }
     
-    override func parseExtraInfo(fromDocument document:ONOXMLDocument)//可选
-    {
-        NSLog("parseExtraInfo should over ride in subclasses");
+    override func parseExtraInfo(fromTBXML tbxml: TBXML) {
     }
     
     override func tableviewWillReload(forResponseObjectsCount objCount:Int)//可选
