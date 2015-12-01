@@ -23,6 +23,7 @@ class ZPRootViewController: RESideMenu {
         // Do any additional setup after loading the view.
         self.contentViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ZPTabBarController")
         self.leftMenuViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ZPSideMenuViewController")
+        
     }
 
     override func viewDidLoad() {

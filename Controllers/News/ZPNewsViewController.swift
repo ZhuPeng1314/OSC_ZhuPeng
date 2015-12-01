@@ -31,9 +31,8 @@ class ZPNewsViewController: ZPObjsViewController {
     
     init(type type1:NewsListType)
     {
-        type = type1
         super.init()
-        
+        self.type = type1
         //自动刷新部分 
         //self.needAutoRefresh = true //默认为true
         //self.refreshInterval = 21600; //默认为21600
@@ -45,7 +44,9 @@ class ZPNewsViewController: ZPObjsViewController {
         fatalError("ZPNewsViewController init(coder:) has not been implemented")
     }
     
-    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -155,10 +156,10 @@ class ZPNewsViewController: ZPObjsViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let news = self.objects[indexPath.row] as! ZPOSCNews
-        if news.eventURL.absoluteString.isEmpty != true
+        if news.eventURL != nil
         {
             print("跟活动相关，调用\(news.eventURL)")
-        }else if news.url.absoluteString.isEmpty != true
+        }else if news.url != nil
         {
             self.navigationController?.handleURL(news.url)
         }else

@@ -28,8 +28,8 @@ class ZPBlogsViewController: ZPNewsViewController {
     
     init(type type1:BlogsType)
     {
-        type = type1
         super.init()
+        self.type = type1
         
         //自动刷新部分
         //self.needAutoRefresh = true //默认为true
@@ -39,6 +39,10 @@ class ZPBlogsViewController: ZPNewsViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
     override func viewDidLoad() {

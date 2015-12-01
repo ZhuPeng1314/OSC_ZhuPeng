@@ -129,7 +129,7 @@ class ZPDetailsViewController: ZPBottomBarViewController,UIWebViewDelegate,UIScr
                 self.navigationController?.popViewControllerAnimated(true)
             }else
             {
-                let details = self.initDetails(dataNode)
+                let details = self.loadDetailsFromXML(dataNode)
                 self.loadDetails(details)
             }
             
@@ -167,9 +167,9 @@ class ZPDetailsViewController: ZPBottomBarViewController,UIWebViewDelegate,UIScr
     }
     
     // MARK: - 将网络中得到的xml数据载入特定details数据模型中，在子类中实现
-    func initDetails(xml:UnsafeMutablePointer<TBXMLElement>)->ZPOSCDetails!
+    func loadDetailsFromXML(xml:UnsafeMutablePointer<TBXMLElement>)->ZPOSCDetails!
     {
-        fatalError("initDetails(xml:UnsafeMutablePointer<TBXMLElement>)必须在子类中实现，initDetails(xml:UnsafeMutablePointer<TBXMLElement>) has not been implemented in subclass")
+        fatalError("loadDetailsFromXML(xml:UnsafeMutablePointer<TBXMLElement>)必须在子类中实现，loadDetailsFromXML(xml:UnsafeMutablePointer<TBXMLElement>) has not been implemented in subclass")
     }
     
     // MARK: - UIWebView Delegate

@@ -39,7 +39,7 @@ class ZPPostDetailsViewController: ZPDetailsViewController {
         }
     }
     
-    override func initDetails(xml: UnsafeMutablePointer<TBXMLElement>) -> ZPOSCDetails! {
+    override func loadDetailsFromXML(xml: UnsafeMutablePointer<TBXMLElement>) -> ZPOSCDetails! {
         return ZPOSCPostDetails(element: xml)
     }
 

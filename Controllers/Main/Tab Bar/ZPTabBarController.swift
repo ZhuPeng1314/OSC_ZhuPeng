@@ -25,11 +25,18 @@ class ZPTabBarController: UITabBarController {
                                          underTabBar: true)
         let newsNav = self.addNavigationItemForViewController(newsSVC)
         
+        /*************************************/
+        
+        let latestTweetsVC = ZPTweetsViewController(type: TweetsType.AllTweets)
+        let hotTweetsVC = ZPTweetsViewController(type: TweetsType.HotestTweets)
+        
         let tweetsSVC = ZPSwipableViewController(title: "动弹",
                                              subTitles: ["最新动弹", "热门动弹", "我的动弹"],
-                                           controllers: nil,
+                                           controllers: [latestTweetsVC,hotTweetsVC],
                                            underTabBar: true)
         let tweetsNav = self.addNavigationItemForViewController(tweetsSVC)
+        
+        /*************************************/
         
         let discoverSB = UIStoryboard.init(name: "Discover", bundle: NSBundle.mainBundle())
         let discoverNav = discoverSB.instantiateViewControllerWithIdentifier("Nav")

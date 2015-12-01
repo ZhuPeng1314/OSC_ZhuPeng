@@ -40,7 +40,7 @@ class ZPSoftwareDetailsViewController: ZPDetailsViewController {
         }
     }
     
-    override func initDetails(xml: UnsafeMutablePointer<TBXMLElement>) -> ZPOSCDetails! {
+    override func loadDetailsFromXML(xml: UnsafeMutablePointer<TBXMLElement>) -> ZPOSCDetails! {
         return ZPOSCSoftwareDetails(element: xml)
     }
     

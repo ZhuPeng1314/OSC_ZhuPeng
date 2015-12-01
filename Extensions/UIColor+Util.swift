@@ -85,7 +85,15 @@ extension UIColor {
         }
     }
     
-    
+    static func contentTextColor()->UIColor?
+    {
+        if (UIApplication.sharedApplication().delegate as! AppDelegate).inNightMode
+        {
+            return UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
+        }else{
+            return UIColor.colorWithHex(0x272727)
+        }
+    }
     
 
 }

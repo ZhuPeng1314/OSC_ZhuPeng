@@ -36,13 +36,18 @@ class ZPOSCSummary: ZPOSCBaseObject {
         super.init()
         
         self.id = TBXML.stringForElementNamed(Key.kID, parentElement: element)
-        self.title = TBXML.stringForElementNamed(Key.kTitle, parentElement: element)
+        self.initTitle(element: element)
         self.body = TBXML.stringForElementNamed(Key.kBody, parentElement: element)
         self.initAuthor(element: element)
         self.authorID = TBXML.stringForElementNamed(Key.kAuthorID, parentElement: element)
         self.pubDate = TBXML.dateForElementNamed(Key.kPubDate, parentElement: element)
         self.initCommentCount(element: element)
         
+    }
+    
+    func initTitle(element element: UnsafeMutablePointer<TBXMLElement>)
+    {
+        self.title = TBXML.stringForElementNamed(Key.kTitle, parentElement: element)
     }
     
     func initAuthor(element element: UnsafeMutablePointer<TBXMLElement>)

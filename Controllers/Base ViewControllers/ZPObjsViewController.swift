@@ -30,7 +30,7 @@ class ZPObjsViewController: UITableViewController {
     private var requestManager:AFHTTPRequestOperationManager!
     var shouldFetchDataAfterLoaded = true //如果为false则viewDidLoaded方法中不获取数据
     var needCache = true
-    var label = UILabel() //用来计算动态变化的行高，并不显示该控件，只是为了利用它的sizeThatFits方法
+    var label = UILabel.Measured.label //用来计算动态变化的行高，并不显示该控件，只是为了利用它的sizeThatFits方法
     
     var lastCell:LastCell!
     
@@ -48,6 +48,10 @@ class ZPObjsViewController: UITableViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
     override func viewDidLoad() {
