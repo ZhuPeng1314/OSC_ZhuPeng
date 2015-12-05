@@ -13,7 +13,7 @@
         <!--Root View Controller-->
         <scene sceneID="g2F-6e-WMK">
             <objects>
-                <tableViewController id="RId-BL-WAf" sceneMemberID="viewController">
+                <tableViewController id="RId-BL-WAf" customClass="HomepageViewController" customModule="OSC_ZhuPeng" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="P1v-gG-Z5Z">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -32,8 +32,8 @@
                                         <color key="titleShadowColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvc-Lj-ANN">
-                                    <rect key="frame" x="262" y="73" width="76" height="21"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="点击头像登录" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvc-Lj-ANN">
+                                    <rect key="frame" x="249" y="73" width="102" height="21"/>
                                     <animations/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -75,17 +75,20 @@
                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                 </button>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-portrait" translatesAutoresizingMaskIntoConstraints="NO" id="jZA-z8-v9n">
+                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-portrait" translatesAutoresizingMaskIntoConstraints="NO" id="jZA-z8-v9n">
                                     <rect key="frame" x="275" y="20" width="50" height="50"/>
                                     <animations/>
+                                    <gestureRecognizers/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="50" id="TP1-yh-xvf"/>
                                         <constraint firstAttribute="height" constant="50" id="rtO-5C-TkF"/>
                                     </constraints>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="JWC-je-f1U" appends="YES" id="qC8-DH-9NR"/>
+                                    </connections>
                                 </imageView>
                             </subviews>
                             <animations/>
-                            <color key="backgroundColor" red="0.30828802929999999" green="0.43011385790000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="rw6-WI-heP" firstAttribute="leading" secondItem="EwJ-dk-IqG" secondAttribute="trailing" id="6EX-u0-3sG"/>
                                 <constraint firstItem="W97-6a-D4j" firstAttribute="width" secondItem="EwJ-dk-IqG" secondAttribute="width" id="BwN-bF-dq5"/>
@@ -125,7 +128,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -145,7 +148,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -165,7 +168,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -182,8 +185,23 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="Lwf-v8-vxr"/>
+                    <connections>
+                        <outlet property="QRcodeButton" destination="BmC-IO-Rgx" id="5u9-cO-U38"/>
+                        <outlet property="collectionButton" destination="rw6-WI-heP" id="cY6-oL-ccC"/>
+                        <outlet property="creditButton" destination="EwJ-dk-IqG" id="4Ay-LE-bwP"/>
+                        <outlet property="fansButton" destination="W97-6a-D4j" id="YiR-uq-yt3"/>
+                        <outlet property="followingButton" destination="b7j-hr-LBv" id="nD3-e0-xRe"/>
+                        <outlet property="nameLabel" destination="jvc-Lj-ANN" id="hsK-io-R8h"/>
+                        <outlet property="portraitView" destination="jZA-z8-v9n" id="DxL-E2-DfE"/>
+                        <outlet property="separator" destination="eo7-pQ-VV8" id="tKb-OK-HVD"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ACT-Ea-hm9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="JWC-je-f1U">
+                    <connections>
+                        <action selector="tapPortrait" destination="RId-BL-WAf" id="Q6N-BJ-WP5"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="344" y="335"/>
         </scene>

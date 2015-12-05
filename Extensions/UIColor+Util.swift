@@ -95,5 +95,24 @@ extension UIColor {
         }
     }
     
+    static func refreshControlColor()->UIColor?
+    {
+        if (UIApplication.sharedApplication().delegate as! AppDelegate).inNightMode
+        {
+            return UIColor.colorWithHex(0x13502A)
+        }else{
+            return UIColor.colorWithHex(0x21B04B)
+        }
+    }
+    
+    static func lineColor()->UIColor?
+    {
+        if (UIApplication.sharedApplication().delegate as! AppDelegate).inNightMode
+        { 
+            return UIColor(red: 18.0/255, green: 144.0/255, blue: 105.0/255, alpha: 0.6)
+        }else{
+            return UIColor.colorWithHex(0x2bc157)
+        }
+    }
 
 }

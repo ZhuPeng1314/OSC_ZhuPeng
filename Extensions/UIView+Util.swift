@@ -20,4 +20,10 @@ extension UIView {
     {
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(format, options: opts, metrics: metrics, views: views))
     }
+    
+    func setBorderWidth(width:CGFloat, color:UIColor)
+    {
+        self.layer.borderWidth = width
+        self.layer.borderColor = color.CGColor
+    }
 }
