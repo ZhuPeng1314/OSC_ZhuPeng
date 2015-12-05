@@ -31,7 +31,13 @@ class ZPOSCNewsDetails: ZPOSCDetails {
         
         let relativesElement = TBXML.childElementNamed(KeyNews.relativies, parentElement: element)
         self.relatives = Array()
-        var relativeElement = TBXML.childElementNamed(KeyNews.relative, parentElement: relativesElement)
+        
+        var relativeElement:UnsafeMutablePointer<TBXMLElement> = nil
+        if relativesElement != nil
+        {
+            relativeElement = TBXML.childElementNamed(KeyNews.relative, parentElement: relativesElement)
+        }
+        
         while (relativeElement != nil)
         {
             let rTitle = TBXML.stringForElementNamed(KeyNews.rtitle, parentElement: relativeElement)

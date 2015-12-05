@@ -53,7 +53,7 @@ class Utils: NSObject {
     {
         var result:String! = nil
         
-        let templatePath = NSBundle.mainBundle().pathForResource(templateName, ofType: "html")
+        let templatePath = NSBundle.mainBundle().pathForResource(templateName, ofType: "html", inDirectory: "html")//(templateName, ofType: "html")
         
         do {
             let template = try String(contentsOfFile: templatePath!, encoding: NSUTF8StringEncoding)

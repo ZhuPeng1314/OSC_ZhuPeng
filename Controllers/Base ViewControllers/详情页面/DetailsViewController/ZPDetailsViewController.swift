@@ -71,6 +71,7 @@ class ZPDetailsViewController: ZPBottomBarViewController,UIWebViewDelegate,UIScr
         self.detailsView = UIWebView()
         self.detailsView.delegate = self
         self.detailsView.scrollView.delegate = self
+        self.detailsView.scalesPageToFit = true
         self.detailsView.opaque = false //不透明
         self.detailsView.backgroundColor = UIColor.themeColor()
         self.detailsView.translatesAutoresizingMaskIntoConstraints = false
@@ -117,7 +118,7 @@ class ZPDetailsViewController: ZPBottomBarViewController,UIWebViewDelegate,UIScr
         requestManager.GET(self.detailsURLString, parameters: nil, success: { (operation, data) -> Void in
             
             let xml = TBXML.getXMLFromUTF8Data(data as! NSData)
-            
+            //print(NSString(data: data as! NSData, encoding: NSUTF8StringEncoding))
             if xml == nil
             {//数据无法解析,直接返回上一级
                 self.navigationController?.popViewControllerAnimated(true)
