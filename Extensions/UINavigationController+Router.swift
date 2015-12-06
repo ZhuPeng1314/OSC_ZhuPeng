@@ -17,7 +17,7 @@ extension UINavigationController {
         if urlString.containsString("oschina.net")
         {
             //站内链接
-            print("站内链接")
+            //print("站内链接")
             let index = urlString.startIndex.advancedBy(7)
             urlString = urlString.substringFromIndex(index) //去掉"http://"
             var viewController:UIViewController!
