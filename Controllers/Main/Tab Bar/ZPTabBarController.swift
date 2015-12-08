@@ -72,7 +72,15 @@ class ZPTabBarController: UITabBarController {
     {
         let navigationController = UINavigationController(rootViewController: viewController)
         
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navigationbar-sidebar"), style: UIBarButtonItemStyle.Plain, target: self, action: "onClickMenuButton")
+        
         return navigationController
+    }
+    
+    func onClickMenuButton()
+    {
+        //(self.sideMenuViewController.leftMenuViewController as! ZPSideMenuViewController).reloadHeaderView()
+        self.sideMenuViewController.presentLeftMenuViewController()
     }
 
 }

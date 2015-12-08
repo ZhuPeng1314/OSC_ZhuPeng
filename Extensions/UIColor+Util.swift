@@ -114,5 +114,15 @@ extension UIColor {
             return UIColor.colorWithHex(0x2bc157)
         }
     }
+    
+    static func userNameColor()->UIColor?
+    {
+        if (UIApplication.sharedApplication().delegate as! AppDelegate).inNightMode
+        {
+            return UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
+        }else{
+            return UIColor.colorWithHex(0x696969)
+        }
+    }
 
 }

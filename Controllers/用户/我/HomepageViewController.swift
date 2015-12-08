@@ -10,7 +10,7 @@ import UIKit
 
 class HomepageViewController: UITableViewController {
 
-    @IBOutlet var portraitView: UIImageView!
+    @IBOutlet var portraitView: CirclePortrait!
     @IBOutlet var QRcodeButton: UIButton!
     @IBOutlet var nameLabel: UILabel!
     
@@ -35,6 +35,7 @@ class HomepageViewController: UITableViewController {
         
         self.tableView.backgroundColor = UIColor.themeColor()
         self.tableView.separatorColor = UIColor.separatorColor()
+        self.portraitView.addTapAction(noLogin: self.pushLoginVC_Block(), hasLogin: nil)
         
         setupSubviews()
         refreshHeaderView() //根据登录状态，更新homepage页面的顶部view的各部分数据
@@ -57,9 +58,6 @@ class HomepageViewController: UITableViewController {
         setupButtonLabelFormat(collectionButton)
         setupButtonLabelFormat(followingButton)
         setupButtonLabelFormat(fansButton)
-        
-        self.portraitView.setBorderWidth(2.0, color: UIColor.whiteColor())
-        self.portraitView.setCornerRadius(25.0)
         
         self.setCoverImage()
         
@@ -95,30 +93,15 @@ class HomepageViewController: UITableViewController {
             self.tableView.scalableCover?.image = UIImage(named: imageName)
         }
     }
-
-    // MARK:- 点击头像事件
-    @IBAction func tapPortrait()
-    {
-        if NetworkStatusUtils.isNoNetworkWithHUD() == false //如果无网络会显示1秒钟HUD提示
-        {
-            if Config.getOwnID() == nil //未登录
-            {
-                pushLoginVC()//显示登录界面
-            }else{
-            
-                //显示用户详情
-            }
-        }
-        
-    }
     
-    // MARK: - 弹出登录界面
-    private func pushLoginVC()
+    // MARK: - 弹出登录界面的block
+    private func pushLoginVC_Block()->()->Void
     {
-        
+        return { [unowned self] in
         let loginSB = UIStoryboard(name: "Login", bundle: nil)
         let loginVC = loginSB.instantiateViewControllerWithIdentifier("LoginVC")
         self.navigationController?.pushViewController(loginVC, animated: true)
+        }
     }
     
     // MARK: - 登录成功
@@ -142,9 +125,7 @@ class HomepageViewController: UITableViewController {
         if isLogin
         {
             self.myID = myProfile.id
-            self.portraitView.asyncLoadImage(myProfile.portraitURL, defaultImageName: "default-portrait", reloadBlock: { (newPortrait) -> Void in
-                self.portraitView.image = newPortrait
-            })
+            self.portraitView.loadPortrait(myProfile.portraitURL)
             self.nameLabel.text = myProfile.name
             
             //tweet相关的 暂不实现

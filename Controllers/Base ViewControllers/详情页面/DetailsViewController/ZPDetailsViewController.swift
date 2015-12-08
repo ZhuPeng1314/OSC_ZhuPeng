@@ -88,7 +88,7 @@ class ZPDetailsViewController: ZPBottomBarViewController,UIWebViewDelegate,UIScr
         //底部操作Bar相关 暂时不实现
         
         //添加等待动画
-        self.HUD = Utils.createHUD()
+        self.HUD = MBProgressHUDUtils.createHUD()
         self.HUD.userInteractionEnabled = false
         
         self.requestManager = AFHTTPRequestOperationManager.OSCManager()

@@ -24,6 +24,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
 
         self.view.backgroundColor = UIColor.themeColor()
+        prefillAccountAndPassword() //预填充账号密码
         
         let valid = RACSignal.combineLatest([accountField.rac_textSignal(), passwordField.rac_textSignal()]) { [unowned self] () -> AnyObject! in
             let account = self.accountField.text! as NSString
@@ -35,7 +36,6 @@ class LoginViewController: UIViewController {
         RAC(loginButton, "alpha") <= valid.map({ (isValid) -> AnyObject! in
             return ((isValid as! Bool) ? 1.0 : 0.4)
         })
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,6 +51,16 @@ class LoginViewController: UIViewController {
         }
     }
 
+    // MARK: - 预填充账号密码
+    func prefillAccountAndPassword()
+    {
+        let data = Config.getOwnAccountAndPassword()
+        if data != nil
+        {
+            self.accountField.text = data[0]
+            self.passwordField.text = data[1]
+        }
+    }
     
     // MARK: - Login
     

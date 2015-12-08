@@ -9,13 +9,22 @@
 import UIKit
 
 extension UITextView {
-
+    
     struct Meatured {
-        static var textView = {()->UITextView! in
-            let textView1 = UITextView(frame: CGRectZero)
-            ZPTweetCell.initContentTextView(textView1)
-            return textView1
-        }()
+        static var textView:UITextView
+        {
+            struct Instance {
+                static var textView1: UITextView?
+                static var token: dispatch_once_t = 0
+            }
+            
+            dispatch_once(&(Instance.token)) { () -> Void in
+                Instance.textView1 = UITextView(frame: CGRectZero)
+                ZPTweetCell.initContentTextView(Instance.textView1!)
+            }
+            
+            return Instance.textView1!
+        }
     }
 
 }

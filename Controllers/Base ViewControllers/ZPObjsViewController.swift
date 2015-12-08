@@ -117,11 +117,10 @@ class ZPObjsViewController: UITableViewController {
             
             let tbxml = TBXML.getXMLFromUTF8Data(data as! NSData)
             
-            let newObjects = self.parseXML(tbxml: tbxml)
+            let newObtainedObjects = self.parseXML(tbxml: tbxml)
+            var newObjects = Array<ZPOSCSummary>()
             
-            self.parseXML(tbxml: tbxml)
-            
-            for obj in newObjects
+            for obj in newObtainedObjects
             {
                 var shouldBeAdded = true
                 
@@ -137,8 +136,13 @@ class ZPObjsViewController: UITableViewController {
                 if shouldBeAdded
                 {
                     self.objects.addObject(obj)
+                    newObjects.append(obj)
                 }
             }
+            
+            self.handleNewObjects(newObjects)
+            
+            self.parseExtraInfo(fromTBXML: tbxml)
             
             
             //自动刷新的部分 暂时不实现
@@ -208,6 +212,12 @@ class ZPObjsViewController: UITableViewController {
     func parseExtraInfo(fromTBXML tbxml:TBXML)//可选
     {
         NSLog("parseExtraInfo should over ride in subclasses");
+    }
+    
+    //只处理新增的Object
+    func handleNewObjects(newObjects:Array<ZPOSCSummary>)//可选
+    {
+        NSLog("handleNewObjects should over ride in subclasses");
     }
     
     func tableviewWillReload(forResponseObjectsCount objCount:Int)//可选

@@ -49,8 +49,6 @@ class ZPTweetsViewController: ZPObjsViewController,UITextViewDelegate {
         super.viewDidLoad()
         self.tableView.registerClass(ZPTweetCell.self, forCellReuseIdentifier: ZPTweetsViewController.kTweetCellID)
         
-        
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -74,8 +72,13 @@ class ZPTweetsViewController: ZPObjsViewController,UITextViewDelegate {
         return tweets
     }
     
+    override func handleNewObjects(newObjects:Array<ZPOSCSummary>)//可选
+    {
+        self.asyncLoadImages(newObjects) //每次加载完新tweet信息(不含图片)后，会重新检索需要加载的头像和图片
+    }
+    
     override func parseExtraInfo(fromTBXML tbxml: TBXML) {
-        
+       
     }
 
     override func tableviewWillReload(forResponseObjectsCount objCount:Int)//可选
@@ -119,20 +122,13 @@ class ZPTweetsViewController: ZPObjsViewController,UITextViewDelegate {
         cell.setSelectableItemWithTag(row)
         cell.backgroundColor = UIColor.themeColor()
         cell.setContentWithTweet(tweet)
-        self.loadPortrait(tweet)
-        cell.portrait.image = tweet.portraitImage
+        
+        cell.portrait.image = tweet.portraitImage ?? UIImage(named: "default-portrait")
         
         if tweet.hasAnImage == true && tweet.smallImgURL != nil
         {
             cell.thumbnail.hidden = false
-            if tweet.smallImg == nil
-            {// 无图则下载并reload tableview, 已下载好则直接加载
-                cell.thumbnail.image = UIImage(named: "loading")
-                self.downloadThumbnailImageThenReload(tweet)
-            }else
-            {
-                cell.thumbnail.image = tweet.smallImg
-            }
+            cell.thumbnail.image = tweet.smallImg ?? UIImage(named: "loading")
             
         }else
         {
@@ -188,59 +184,50 @@ class ZPTweetsViewController: ZPObjsViewController,UITextViewDelegate {
         self.tableView(self.tableView, didSelectRowAtIndexPath: self.tableView.indexPathForRowAtPoint(point)!)
     }
     
-    func downloadThumbnailImageThenReload(tweet:ZPOSCTweet)
+    func asyncLoadImages(newObjects:Array<ZPOSCSummary>)
     {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
-            if let data = NSData(contentsOfURL: tweet.smallImgURL)
+        (newObjects as NSArray).enumerateObjectsUsingBlock { (object, i, _) -> Void in
+            let tweet = object as! ZPOSCTweet
+            if tweet.portraitImage == nil && tweet.portraitURL != nil
             {
-                let image = UIImage(data: data)
-                tweet.smallImg = image
-                
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                UIImageView.asyncLoadImage(tweet.portraitURL, reloadBlock: { (_) -> Void in
+                    self.tableView.reloadData()
+                    }, storeBlock: { (image) -> UIImage! in
+                        if image != nil
+                        {
+                            tweet.portraitImage = image
+                        }
+                        
+                        return tweet.portraitImage
+                })
+            }
+            
+            if tweet.smallImg == nil && tweet.smallImgURL != nil
+            {
+                UIImageView.asyncLoadImage(tweet.smallImgURL, reloadBlock: { (_) -> Void in
+                    
                     // 单独刷新某一行会有闪烁，全部reload反而较为顺畅
                     tweet.cellHeight = 0.0 //由于之前用默认加载图片占位，需要重新计算cell高度，故仔此处清零
                     self.tableView.reloadData()
+                    
+                    }, storeBlock: { (image) -> UIImage! in
+                        if image != nil
+                        {
+                            tweet.smallImg = image
+                        }
+                        return tweet.smallImg
                 })
-                
-            }else
-            {
-                print("Download Image failed: \(tweet.smallImgURL.absoluteString)")
-            }
-        }
-        
-    }
-    
-    func loadPortrait(tweet:ZPOSCTweet)
-    {
-        if tweet.portraitURL != nil
-        {
-            if tweet.portraitImage == nil
-            {
-                tweet.portraitImage = UIImage(named: "default-portrait")
-                downloadImageThenReload(tweet)
-            }
-        }else{
-            tweet.portraitImage = UIImage(named: "default-portrait")
-        }
-    }
-    
-    func downloadImageThenReload(tweet:ZPOSCTweet)
-    {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
-            if let data = NSData(contentsOfURL: tweet.portraitURL)
-            {
-                let image = UIImage(data: data)
-                
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    tweet.portraitImage = image
-                    self.tableView.reloadData()
-                })
-                
-            }else
-            {
-                print("Download Image failed: \(tweet.portraitURL.absoluteString)")
             }
         }
     }
 
 }
+
+
+
+
+
+
+
+
+

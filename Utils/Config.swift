@@ -17,6 +17,10 @@ class Config: NSObject {
         static let kProfile  = "profile"
         static let kUserID = "userID"
         static let kUserName = "name"
+        static let kPortrait = "portrait"
+    }
+    struct Profile {
+        static var userInfo:ZPOSCUser!
     }
     
     
@@ -42,31 +46,33 @@ class Config: NSObject {
     
     static func saveProfile(user:ZPOSCUser) // update也用该方法
     {
+        self.Profile.userInfo = user//保存在静态变量中
         let userData = NSKeyedArchiver.archivedDataWithRootObject(user)
         let userDefaults = NSUserDefaults.standardUserDefaults()
         userDefaults.setObject(userData, forKey: Key.kProfile)
-        
-        userDefaults.setObject(user.id, forKey: Key.kUserID)
-        userDefaults.setObject(user.name, forKey: Key.kUserName)
         
         userDefaults.synchronize()
     }
     
     static func clearProfile()
     {
+        self.Profile.userInfo = nil //清除静态变量中的数据
         let userDefaults = NSUserDefaults.standardUserDefaults()
         userDefaults.removeObjectForKey(Key.kProfile)
-        //userDefaults.setObject(NSNumber(integer: 0), forKey: Key.kProfile)
-        
-        userDefaults.removeObjectForKey(Key.kUserID)
-        //userDefaults.setObject(NSNumber(integer: 0), forKey: Key.kUserID)
-        userDefaults.setObject("点击头像登录", forKey: Key.kUserName)
+
+        userDefaults.removeObjectForKey(Key.kPortrait)//同时移除已下载的头像数据
         
         userDefaults.synchronize()
     }
     
     static func getMyProfile()->ZPOSCUser!
     {
+        if self.Profile.userInfo != nil
+        {
+            //仅从静态变量中读取
+            return self.Profile.userInfo
+        }
+        
         let userDefaults = NSUserDefaults.standardUserDefaults()
         let userData = userDefaults.objectForKey(Key.kProfile)
         
@@ -78,7 +84,8 @@ class Config: NSObject {
             let user = NSKeyedUnarchiver.unarchiveObjectWithData(userData as! NSData)
             if user?.isKindOfClass(ZPOSCUser.self) == true
             {
-                return user as! ZPOSCUser
+                self.Profile.userInfo = user as! ZPOSCUser //保存在静态变量中
+                return self.Profile.userInfo
             }
         }
         return nil
@@ -86,51 +93,49 @@ class Config: NSObject {
 
     static func getOwnID()->String!
     {
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        let userIdData = userDefaults.objectForKey(Key.kUserID)
-        
-        if userIdData == nil {return nil}
-        
-        return userIdData as! String
-        
-        /*if let user = Config.getMyProfile()
+        if let user = Config.getMyProfile()
         {
             return user.id
         }else
         {
             return nil
-        }*/
+        }
     }
     
     static func getUserName()->String!
     {
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        let userName = userDefaults.objectForKey(Key.kUserName)
-        
-        if userName == nil { return "点击头像登录" }
-        
-        return userName as! String
-        
-        /*
         if let user = Config.getMyProfile()
         {
             return user.name
         }else
         {
-            return nil
-        }*/
+            return "点击头像登录"
+        }
     }
     
     // MARK:- Portrait
     
     static func getPortrait()->UIImage!
     {
-        return nil
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        let portraitData = userDefaults.objectForKey(Key.kPortrait)
+        if portraitData == nil
+        {
+            return nil
+        }
+        else
+        {
+            let portrait = UIImage(data: portraitData as! NSData)
+            return portrait
+        }
+        
     }
     
     static func savePortrait(portrait:UIImage)
     {
-        
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        userDefaults.setObject(UIImagePNGRepresentation(portrait), forKey: Key.kPortrait)
+        userDefaults.synchronize()
     }
     
     // MARK:- Cookies
